@@ -146,6 +146,7 @@ Hippo:Hippos
 Hippogriff:Hippogriffs
 Homarid:Homarids
 Homunculus:Homunculi
+Horde:Horde
 Horror:Horrors
 Horse:Horses
 Human:Humans
