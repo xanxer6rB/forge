@@ -1,0 +1,11 @@
+[metadata]
+Code=HORDE
+Alias=HORDE
+Date=2020-01-01
+Name=Horde Magic
+Type=Other
+
+[cards]
+1 C Horde
+2 S HordeFormat
+3 S HordeFormat - Ai
