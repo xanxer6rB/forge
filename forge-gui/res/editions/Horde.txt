@@ -7,5 +7,8 @@ Type=Other
 
 [cards]
 1 C Horde
-2 S HordeFormat
-3 S HordeFormat - Ai
+2 S HordeFormat - Intensify
+2 S HordeFormatAi - Intensify
+4 S HordeFormat - Radiation
+5 S HordeFormat - Basic Rules
+6 S HordeFormat - ModeSelector
