@@ -15,7 +15,7 @@ SVar:DBsetup:DB$ ChangeZone | Defined$ Self | Origin$ Library | Destination$ Sid
 SVar:DBChooseHorde:DB$ ChoosePlayer | ValidTgts$ Player | Optional$ True | OptionalDecider$ You | SubAbility$ TrigChangeAll | StackDescription$ SpellDescription | SpellDescription$ Choose target player to be the Horde.
 
 # HORDE SHUFFLES HAND AND GY INTO LIBRARY
-SVar:TrigChangeAll:DB$ ChangeZoneAll | Origin$ Graveyard,Hand | Destination$ Library | Defined$ Targeted | ChangeType$ Card | Shuffle$ True | SubAbility$ DBConjureHorde | SpellDescription$ Horde discards and and shuffles its graveyard into its library | SubAbility$ DBConjureHorde
+SVar:TrigChangeAll:DB$ ChangeZoneAll | Origin$ Graveyard,Hand | Destination$ Library | Defined$ Targeted | ChangeType$ Card | Shuffle$ True | SubAbility$ DBConjureHorde | SpellDescription$ The Horde shuffles its hand and graveyard into its library | SubAbility$ DBConjureHorde
 
 # CHOOSE AMOUNT OF HORDE THAT WILL BE ADDED TO AI LIBRARY
 SVar:DBConjureHorde:DB$ GenericChoice | Choices$ HordeDeckSize,Horde50,Horde100,Horde150,Horde200,ChooseHordeNumber | Defined$ You | ChoiceRestriction$ Remembered | RememberChoice$ False | GenericChoiceNum$ 1 | StackDescription$ SpellDescription | SubAbility$ DBsetLife | SpellDescription$ How many Horde will be added to the library?: Hordes library size, 50 Horde, 100 Horde, 150 Horde, 200 Horde or Choose any number.
@@ -48,7 +48,7 @@ SVar:xTnum:Count$ChosenNumber
 # HORDE EMBLEM ABILITIES/RULES ADDED TO EMBLEM(S)
 SVar:DBHordeEmblem:DB$ Effect | EffectOwner$ Targeted | StackDescription$ SpellDescription | Name$ HordeFormarLike Effect | StaticAbilities$ HordeTap,hordeHaste,hordeMustAttk,HordeLand,DBFreePlay,fightTheHorde,noDraw,reduceCmdrCost | Triggers$ hordesTurn,lifeLossHordeMills,winCon | ReplacementEffects$ DeathRep,cantLose,cantWin | SVars$ HasAttackEffect,fightAHorde,TrigIntensify,TrigHordeCascade,HordeCast,HordeCreateToken,AffectedX,DBSideboard,TrigMill,DBCleanup,TrigYouHaveSurvived,H,Q,W,X,Y,Z | Duration$ Permanent
 
-# THE HORDE'S UPKEEP WITHOUT INTENSIFY
+# THE HORDE'S UPKEEP WITH INTENSIFY
 SVar:hordesTurn:Mode$ Phase | Phase$ Upkeep | ValidPlayer$ You | EffectZone$ Command | TriggerZones$ Command | Execute$ TrigHordeCascade | TriggerDescription$ The Horde reveals the top card of its library until it reveals a card not named Horde, casts the card(s) and puts all Horde creatures onto the battlefield. Intensity is increased by 1.
 #SVar:TrigIntensify:DB$ Intensify | SubAbility$ TrigHordeCascade
 SVar:TrigHordeCascade:DB$ DigUntil | ValidPlayer$ You | Valid$ Card.notnamedHorde | Reveal$ True | Amount$ 1 | FoundDestination$ Exile | RevealedDestination$ Exile | ImprintRevealed$ True | RememberFound$ True | RememberRevealed$ True | RememberChanged$ True | SubAbility$ DBOmenLand
@@ -72,7 +72,7 @@ DeckHas:Ability$Mill & Type$Horde
 DeckHints:Ability$Mill & Type$Horde
 
 # THE HORDE CAN PLAY CARDS FROM HAND, EXILE AND COMMANDER FOR FREE
-SVar:DBFreePlay:Mode$ Continuous | Affected$ Card.nonLand+YouOwn,Card.nonHorde+YouOwn,Card.IsCommander | MayPlay$ True | MayPlayWithoutManaCost$ True | AffectedZone$ Hand,Exile,Command | EffectZone$ Command | Description$ The Horde may cast spells from its hand, exile and commander without paying their mana costs.
+SVar:DBFreePlay:Mode$ Continuous | Affected$ Card.nonLand+YouOwn,Card.nonHorde+YouOwn,Card.IsCommander | MayPlay$ True | MayPlayWithoutManaCost$ True | AffectedZone$ Hand,Exile,Command | EffectZone$ Command | Description$ The Horde may cast spells from its hand, exile and commander without paying their mana costs with no commander penalty.
 SVar:reduceCmdrCost:Mode$ ReduceCost | ValidCard$ Card.IsCommander+YouOwn | Type$ Spell | Amount$ AffectedX | EffectZone$ Command | Description$ The Horde's commander costs {2} less to cast for each time it's been cast from the command zone this game.
 SVar:AffectedX:Count$CommanderCastFromCommandZone/Twice
 
@@ -93,10 +93,10 @@ SVar:hordeHaste:Mode$ Continuous | EffectZone$ Command | Affected$ Creature.YouC
 # CREATURES THE HORDE CONTROLS ATTACK EACH TURN IF ABLE
 SVar:hordeMustAttk:Mode$ MustAttack | EffectZone$ Command | ValidCreature$ Creature.YouCtrl | Description$ Creatures the Horde controls must attack each combat if able.
 
-# HORDE CREATURES CAN'T ATTACK IF ATTACKED PREVIOUS TURN
+# HORDE TYPE CREATURES CAN'T ATTACK IF ATTACKED PREVIOUS TURN
 SVar:HordeTap:Mode$ Continuous | EffectZone$ Command |  Affected$ Card.Horde+attackedLastTurn | AddHiddenKeyword$ CARDNAME can't attack. | Description$ CARDNAME can't attack if it attacked during your last turn.
 
-# WIN CONDITION - SURVIVORS WIN IF HORDE HAS NO CARDS IN LIBRARY, GRAVEYARD AND NO CREATURES ON BATTLEFIELD
+# WIN CONDITION - SURVIVORS WIN IF HORDE HAS NO CARDS IN LIBRARY AND NO CREATURES ON BATTLEFIELD
 SVar:cantLose:Event$ GameLoss | EffectZone$ Command | ActiveZones$ Command | ValidPlayer$ You | ValidLoseReason$ LifeReachedZero | Layer$ CantHappen | CheckSVar$ W | SVarCompare$ GE1 | Description$ The Horde doesn't lose the game for having 0 or less life.
 SVar:cantWin:Event$ GameWin | EffectZone$ Command | ActiveZones$ Command | ValidPlayer$ Opponent | Layer$ CantHappen | CheckSVar$ W | SVarCompare$ GE1 | Description$ Survivors can't win the game unless the Horde has no cards in its library and no creatures on the battlefield.
 SVar:winCon:Mode$ Always | EffectZone$ Command | CheckSVar$ W | SVarCompare$ LE0 | TriggerZones$ Command | Execute$ TrigYouHaveSurvived | TriggerDescription$ When the Horde has no cards in its library and controls no creatures, you have survived the game.
@@ -105,4 +105,5 @@ SVar:Y:Count$ValidLibrary Card.YouOwn+inZoneLibrary
 SVar:Z:Count$ValidBattlefield Creature.YouCtrl+inZoneBattlefield
 SVar:W:SVar$Y/Plus.Z
 
-Oracle:++ HordeFormatLike ++\nA custom card to play a form of Horde format.\nTo play, have this card in your library.\nAcknowledgements: Peter Knudson - For original Horde format rules, rikimbo - for help with Forge scripts, Loco-Motive and welknair for their rules and versions.
+Oracle:++ HordeFormat - Basic Rules ++\nA custom card to play a form of Horde format.\nTo play, have this card in your library.\nBasic rules of the Horde format as close as possible.\n- The Horde shuffles its hand and graveyard into its library.\n- Choose how many Horde will be added to the library?: Hordes library size, 50 Horde, 100 Horde, 150 Horde, 200 Horde or Choose any number.\n- Survivors set own life total from a choice of 25,35,40,55,65 or 75.\n- Choose a number of turns the Horde skips for you to prepare.\n- The Horde reveals the top card of its library until it reveals a card not named Horde and casts all cards revealed this way.\n- Horde cards when cast are put into the sideboard instead of going anywhere else.\n- Whenever the Horde loses life, it mills that many cards. (Damage dealt by sources without infect causes loss of life.)\n- The Horde may cast spells from its hand, exile and commander without paying their mana costs with no commander penalty.\n- The Horde may play lands from exile and graveyard.\n- Survivor creatures can "Fight" creatures the Horde controls.\n- The Horde can't draw cards.\n- Creatures the Horde controls have haste and can't block and must attack each turn if able.\n- Horde type creature can't attack if attacked previous turn.\n- Win condition: Survivors win if the Horde has no cards in its library and no creatures on the battlefield.
+\n++++++++++++++++++++++++++++++++++
