@@ -15,7 +15,7 @@ SVar:DBsetup:DB$ ChangeZone | Defined$ Self | Origin$ Library | Destination$ Sid
 SVar:DBChooseHorde:DB$ ChoosePlayer | ValidTgts$ Player | Optional$ True | OptionalDecider$ You | SubAbility$ TrigChangeAll | StackDescription$ SpellDescription | SpellDescription$ Choose target player to be the Horde.
 
 # HORDE SHUFFLES HAND AND GY INTO LIBRARY
-SVar:TrigChangeAll:DB$ ChangeZoneAll | Origin$ Graveyard,Hand | Destination$ Library | Defined$ Targeted | ChangeType$ Card | Shuffle$ True | SubAbility$ DBConjureHorde | SpellDescription$ Horde discards and and shuffles its graveyard into its library | SubAbility$ DBConjureHorde
+SVar:TrigChangeAll:DB$ ChangeZoneAll | Origin$ Graveyard,Hand | Destination$ Library | Defined$ Targeted | ChangeType$ Card | Shuffle$ True | SubAbility$ DBConjureHorde | SpellDescription$ The Horde shuffles its hand and graveyard into its library | SubAbility$ DBConjureHorde
 
 # CHOOSE AMOUNT OF HORDE THAT WILL BE ADDED TO AI LIBRARY
 SVar:DBConjureHorde:DB$ GenericChoice | Choices$ HordeDeckSize,Horde50,Horde100,Horde150,Horde200,ChooseHordeNumber | Defined$ You | ChoiceRestriction$ Remembered | RememberChoice$ False | GenericChoiceNum$ 1 | StackDescription$ SpellDescription | SubAbility$ DBsetLife | SpellDescription$ How many Horde will be added to the library?: Hordes library size, 50 Horde, 100 Horde, 150 Horde, 200 Horde or Choose any number.
@@ -42,8 +42,9 @@ SVar:SurvCurLife:PlayerCountYour$LifeTotal
 
 # CHOOSE NUMBER OF TURNS HORDE SKIPS
 SVar:DBChooseNumber:DB$ ChooseNumber | Min$ 1 | Max$ 3 | AILogic$ Max | Defined$ You | SubAbility$ DBHordeSkipTurns
-SVar:DBHordeSkipTurns:DB$ SkipTurn | NumTurns$ xTnum | Defined$ Targeted | References$ xTnum | SubAbility$ DBHordeEmblem
+SVar:DBHordeSkipTurns:DB$ SkipTurn | NumTurns$ xTnum | Defined$ Targeted | References$ xTnum | SubAbility$ DoDay
 SVar:xTnum:Count$ChosenNumber
+SVar:DoDay:DB$ DayTime | Value$ Day | SubAbility$ DBHordeEmblem
 
 # HORDE EMBLEM ABILITIES/RULES ADDED TO EMBLEM(S)
 SVar:DBHordeEmblem:DB$ Effect | EffectOwner$ Targeted | StackDescription$ SpellDescription | Name$ HordeFormarLike Effect | StaticAbilities$ HordeAddRad,HordeTap,hordeHaste,hordeMustAttk,HordeLand,DBFreePlay,fightTheHorde,noDraw,reduceCmdrCost | Triggers$ hordesTurn,lifeLossHordeMills,winCon | ReplacementEffects$ DeathRep,cantLose,cantWin | SVars$ TrigRadiation,HasAttackEffect,fightAHorde,TrigIntensify,TrigHordeCascade,HordeCast,HordeCreateToken,AffectedX,DBSideboard,TrigMill,DBCleanup,TrigYouHaveSurvived,H,Q,W,X,Y,Z | Duration$ Permanent
@@ -116,4 +117,4 @@ SVar:Y:Count$ValidLibrary Card.YouOwn+inZoneLibrary
 SVar:Z:Count$ValidBattlefield Creature.YouCtrl+inZoneBattlefield
 SVar:W:SVar$Y/Plus.Z
 
-Oracle:++ HordeFormatLike ++\nA custom card to play a form of Horde format.\nTo play, have this card in your library.\nAcknowledgements: Peter Knudson - For original Horde format rules, rikimbo - for help with Forge scripts, Loco-Motive and welknair for their rules and versions.
+Oracle:++ HordeFormat - Radiation ++\nA custom card to play a form of Horde format.\nTo play, have this card in your library.\nBasic rules of the Horde format with Intensify: Beginning of Hordes upkeep it gets an intensity counter then reveals cards from the top of its library until it reveals X cards not named "Horde" where X is equal to the Hordes intensity and casts all cards revealed this way.\nWhen it is Night Horde type creatures gain "When this creature deals combat damage to a player that player gets a Radiation counter.\n++++++++++++++++++++++++++++++++++
