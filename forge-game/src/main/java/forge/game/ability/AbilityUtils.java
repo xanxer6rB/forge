@@ -113,13 +113,6 @@ public class AbilityUtils {
             }
         } else if (defined.equals("Enchanted")) {
             c = hostCard.getEnchantingCard();
-            if (c == null && sa instanceof SpellAbility) {
-                SpellAbility root = ((SpellAbility)sa).getRootAbility();
-                CardCollection sacrificed = root.getPaidList("Sacrificed", true);
-                if (sacrificed != null && !sacrificed.isEmpty()) {
-                    c = sacrificed.getFirst().getEnchantingCard();
-                }
-            }
         } else if (defined.equals("TopOfGraveyard")) {
             final CardCollectionView grave = player.getCardsIn(ZoneType.Graveyard);
 
@@ -2345,6 +2338,9 @@ public class AbilityUtils {
         if (sq[0].equals("YourSpeed")) {
             return doXMath(player.getSpeed(), expr, c, ctb);
         }
+        if (sq[0].equals("AllFourBend")) {
+            return doXMath(calculateAmount(c, sq[player.hasAllElementBend() ? 1 : 2], ctb), expr, c, ctb);
+        }
 
         if (sq[0].equals("Night")) {
             return doXMath(calculateAmount(c, sq[game.isNight() ? 1 : 2], ctb), expr, c, ctb);
@@ -2989,14 +2985,14 @@ public class AbilityUtils {
         if (tgtCard.isFaceDown()) {
             collectSpellsForPlayEffect(list, original, controller, withAltCost);
         } else {
-            if (state == CardStateName.Transformed && tgtCard.isPermanent() && !tgtCard.isAura()) {
+            if (state == CardStateName.Backside && !tgtCard.isModal() && tgtCard.isPermanent() && !tgtCard.isAura()) {
                 // casting defeated battle
                 Spell sp = new SpellPermanent(tgtCard, original);
                 sp.setCardState(original);
                 list.add(sp);
             }
-            if (tgtCard.isModal() && tgtCard.hasState(CardStateName.Modal)) {
-                collectSpellsForPlayEffect(list, tgtCard.getState(CardStateName.Modal), controller, withAltCost);
+            if (tgtCard.isModal() && tgtCard.hasState(CardStateName.Backside)) {
+                collectSpellsForPlayEffect(list, tgtCard.getState(CardStateName.Backside), controller, withAltCost);
             }
         }
 
