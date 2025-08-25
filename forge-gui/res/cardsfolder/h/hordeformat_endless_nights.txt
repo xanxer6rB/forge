@@ -1,6 +1,6 @@
 Name:HordeFormat - Endless Nights
 ManaCost:no cost
-Types:Tribal Instant Horde
+Types:Instant
 K:CARDNAME can't be countered.
 K:MayEffectFromOpeningDeck:DelTrigHorde
 K:Starting Intensity:1
@@ -77,6 +77,15 @@ SVar:TrigMill:DB$ Mill | Defined$ TriggeredPlayer | NumCards$ X
 SVar:X:TriggerCount$LifeAmount
 DeckHas:Ability$Mill & Type$Horde
 DeckHints:Ability$Mill & Type$Horde
+
+
+
+##### ADD THIS TO THE OTHER MODES #####
+#SVar:HordeLifeGain:Mode$ LifeLost | EffectZone$ Command | ValidPlayer$ You | TriggerZones$ Command | Execute$ TrigHordeLifeGain | TriggerDescription$ Whenever you lose life, you gain 2 life for each 1 life you lost. (Damage dealt to you causes you to lose life.)
+#SVar:TrigHordeLifeGain:DB$ GainLife | LifeAmount$ LFG
+#SVar:LFG:TriggerCount$LifeAmount/Times.1
+
+
 
 # THE HORDE CAN PLAY CARDS FROM HAND, EXILE AND COMMANDER FOR FREE
 SVar:DBFreePlay:Mode$ Continuous | Affected$ Card.nonLand+YouOwn,Card.nonHorde+YouOwn,Card.IsCommander | MayPlay$ True | MayPlayWithoutManaCost$ True | AffectedZone$ Hand,Exile,Command | EffectZone$ Command | Description$ The Horde may cast spells from its hand, exile and commander without paying their mana costs.
