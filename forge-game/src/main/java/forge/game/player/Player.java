@@ -2321,7 +2321,7 @@ public class Player extends GameEntity implements Comparable<Player> {
 
     public final void addSacrificedThisTurn(final Card cpy, final SpellAbility source) {
         // Play the Sacrifice sound
-        game.fireEvent(new GameEventCardSacrificed());
+        game.fireEvent(new GameEventCardSacrificed(cpy));
 
         sacrificedThisTurn.add(cpy);
 
@@ -2348,9 +2348,6 @@ public class Player extends GameEntity implements Comparable<Player> {
     }
     public final void resetSpellCastSinceBegOfYourLastTurn() {
         spellsCastSinceBeginningOfLastTurn = Lists.newArrayList();
-    }
-    public final void setSpellCastSinceBegOfYourLastTurn(List<Card> spells) {
-        spellsCastSinceBeginningOfLastTurn = new ArrayList<>(spells);
     }
     public final void addSpellCastSinceBegOfYourLastTurn(List<Card> spells) {
         spellsCastSinceBeginningOfLastTurn.addAll(spells);
