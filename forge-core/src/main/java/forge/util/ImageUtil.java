@@ -3,10 +3,12 @@ package forge.util;
 import forge.ImageKeys;
 import forge.StaticData;
 import forge.card.CardDb;
+import forge.card.CardEdition;
 import forge.card.CardRules;
 import forge.card.CardSplitType;
 import forge.item.IPaperCard;
 import forge.item.PaperCard;
+import java.util.regex.Pattern;
 import forge.item.PaperToken;
 import forge.token.TokenDb;
 import org.apache.commons.lang3.StringUtils;
@@ -103,7 +105,9 @@ public class ImageUtil {
         StringBuilder s = new StringBuilder();
 
         CardRules card = cp.getRules();
-        String edition = cp.getEdition();
+        String edition = cp.getEdition().equals(CardEdition.UNKNOWN_CODE)
+                ? CardEdition.UNKNOWN_SET_NAME
+                : cp.getEdition();
         s.append(toMWSFilename(nameToUse));
 
         final int cntPictures;
@@ -185,6 +189,8 @@ public class ImageUtil {
             }
         } else if (CardSplitType.Split == cp.getRules().getSplitType()) {
             return card.getMainPart().getName() + card.getOtherPart().getName();
+        } else if (cp.hasFlavorName()) {
+            return cp.getDisplayName();
         } else if (!IPaperCard.NO_FUNCTIONAL_VARIANT.equals(cp.getFunctionalVariant())) {
             return cp.getName() + " " + cp.getFunctionalVariant();
         }
@@ -201,14 +207,13 @@ public class ImageUtil {
 
 
     public static String getScryfallDownloadUrl(PaperCard cp, String face, String setCode, String langCode, boolean useArtCrop){
+        final Pattern funnyCardCollectorNumberPattern = Pattern.compile("^F\\d+");
         String editionCode;
         if (setCode != null && !setCode.isEmpty())
             editionCode = setCode;
         else
             editionCode = cp.getEdition().toLowerCase();
         String cardCollectorNumber = cp.getCollectorNumber();
-        // Hack to account for variations in Arabian Nights
-        cardCollectorNumber = cardCollectorNumber.replace("+", "†");
         // override old planechase sets from their modified id since scryfall move the planechase cards outside their original setcode
         if (cardCollectorNumber.startsWith("OHOP")) {
             editionCode = "ohop";
@@ -220,6 +225,11 @@ public class ImageUtil {
             editionCode = "opc2";
             cardCollectorNumber = cardCollectorNumber.substring("OPC2".length());
         }
+        
+        if (funnyCardCollectorNumberPattern.matcher(cardCollectorNumber).matches()) {
+            cardCollectorNumber = cardCollectorNumber.substring(1);
+        }
+
         String versionParam = useArtCrop ? "art_crop" : "normal";
         String faceParam = "";
 
@@ -252,6 +262,11 @@ public class ImageUtil {
                     : "&face=front");
         }
 
+        if (cardCollectorNumber.endsWith("☇")) {
+            faceParam = "&face=back";
+            cardCollectorNumber = cardCollectorNumber.substring(0, cardCollectorNumber.length() - 1);
+        }
+
         return String.format("%s/%s/%s?format=image&version=%s%s", editionCode, encodeUtf8(cardCollectorNumber),
                 langCode, versionParam, faceParam);
     }
@@ -260,6 +275,10 @@ public class ImageUtil {
         String versionParam = "normal";
         if (!faceParam.isEmpty()) {
             faceParam = (faceParam.equals("back") ? "&face=back" : "&face=front");
+        }
+        if (collectorNumber.endsWith("☇")) {
+            faceParam = "&face=back";
+            collectorNumber = collectorNumber.substring(0, collectorNumber.length() - 1);
         }
         return String.format("%s/%s/%s?format=image&version=%s%s", setCode, encodeUtf8(collectorNumber),
                 langCode, versionParam, faceParam);
@@ -281,8 +300,7 @@ public class ImageUtil {
         char c;
         for (int i = 0; i < in.length(); i++) {
             c = in.charAt(i);
-            if ((c == '"') || (c == '/') || (c == ':') || (c == '?')) {
-            } else {
+            if ((c != '"') && (c != '/') && (c != ':') && (c != '?')) {
                 out.append(c);
             }
         }

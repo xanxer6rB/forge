@@ -9,7 +9,7 @@ import forge.screens.match.MatchController;
 public class CardRendererUtils {
     public static boolean needsRotation(final CardView card) {
         return needsRotation(card.isSplitCard() ? ForgePreferences.FPref.UI_ROTATE_SPLIT_CARDS
-                : ForgePreferences.FPref.UI_ROTATE_PLANE_OR_PHENOMENON, card, canShowAlternate(card, card.getName()));
+                : ForgePreferences.FPref.UI_ROTATE_PLANE_OR_PHENOMENON, card, canShowAlternate(card, card.getOracleName()));
     }
     public static boolean needsRotation(final CardView card, final boolean altState) {
         return needsRotation(card.isSplitCard() ? ForgePreferences.FPref.UI_ROTATE_SPLIT_CARDS
@@ -52,7 +52,7 @@ public class CardRendererUtils {
                     showAlt = card.getAlternateState().getOracleText().contains(reference.trim());
                 else {
                     if (card.isRoom()) // special case for room cards
-                        showAlt = card.getAlternateState().getName().equalsIgnoreCase(reference);
+                        showAlt = card.getAlternateState().getOracleName().equalsIgnoreCase(reference);
                     else
                         showAlt = reference.contains(card.getAlternateState().getAbilityText());
                 }
@@ -86,6 +86,10 @@ public class CardRendererUtils {
     public static boolean showCardManaCostOverlay(final CardView card) {
         return isShowingOverlays(card) &&
                 isPreferenceEnabled(ForgePreferences.FPref.UI_OVERLAY_CARD_MANA_COST);
+    }
+
+    public static boolean showCardPerpetualManaCostOverlay() {
+        return isPreferenceEnabled(ForgePreferences.FPref.UI_OVERLAY_CARD_PERPETUAL_MANA_COST);
     }
 
     public static boolean showAbilityIcons(final CardView card) {

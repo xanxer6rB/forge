@@ -109,6 +109,7 @@ Elephant:Elephants
 Elf:Elves
 Elk:Elks
 Employee:Employees
+Eternal:Eternals
 Eye:Eyes
 Faerie:Faeries
 Ferret:Ferrets
@@ -120,6 +121,7 @@ Fractal:Fractals
 Frog:Frogs
 Fungus:Fungi
 Gamer:Gamers
+Gamma:Gammas
 Gargoyle:Gargoyles
 Germ:Germs
 Giant:Giants
@@ -235,6 +237,7 @@ Pilot:Pilots
 Pincher:Pinchers
 Pirate:Pirates
 Plant:Plants
+Platypus:Platypuses
 Porcupine:Porcupines
 Possum:Possums
 Praetor:Praetors
@@ -275,6 +278,7 @@ Shark:Sharks
 Sheep:Sheep
 Siren:Sirens
 Skeleton:Skeletons
+Skrull:Skrulls
 Skunk:Skunks
 Slith:Sliths
 Sliver:Slivers
@@ -284,6 +288,7 @@ Snail:Snails
 Snake:Snakes
 Soldier:Soldiers
 Soltari:Soltaris
+Sorcerer:Sorcerers
 Spawn:Spawns
 Specter:Specters
 Spellshaper:Spellshapers
@@ -316,6 +321,7 @@ Troll:Trolls
 Turtle:Turtles
 Tyranid:Tyranids
 Unicorn:Unicorns
+Utrom:Utroms
 Vampire:Vampires
 Varmint:Varmints
 Vedalken:Vedalkens
@@ -352,6 +358,7 @@ Cartouche
 Case
 Class
 Curse:Curses
+Plan:Plans
 Role
 Room
 Rune
@@ -374,11 +381,13 @@ Junk
 Key:Keys
 Lander:Landers
 Map
+Mutagen
 Powerstone:Powerstones
 Spacecraft:Spacecraft
 Stone:Stones
 Treasure:Treasures
 Vehicle:Vehicles
+Vibranium
 [WalkerTypes]
 Ajani
 Aminatou

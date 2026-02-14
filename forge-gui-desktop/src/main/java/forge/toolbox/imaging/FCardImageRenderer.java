@@ -675,7 +675,7 @@ public class FCardImageRenderer {
 
         //draw mana cost for card
         if (drawMana) {
-            ManaCost manaCost = state.getManaCost();
+            ManaCost manaCost = state.getOriginalManaCost();
             int manaCostWidth = manaCost.getGlyphCount() * NAME_SIZE + HEADER_PADDING;
             CardFaceSymbols.draw(g, manaCost, x + w - manaCostWidth, y + (h - NAME_SIZE) / 2 + 1, NAME_SIZE - 1);
             w -= padding + manaCostWidth;
@@ -797,7 +797,7 @@ public class FCardImageRenderer {
         if (state.isBasicLand()) {
             //draw icons for basic lands
             String imageKey;
-            switch (state.getName().replaceFirst("^Snow-Covered ", "")) {
+            switch (state.getOracleName().replaceFirst("^Snow-Covered ", "")) {
             case "Plains":
                 imageKey = "W";
                 break;

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
 import com.google.common.eventbus.Subscribe;
 
 import forge.LobbyPlayer;
@@ -17,7 +18,6 @@ import forge.game.player.RegisteredPlayer;
 import forge.game.spellability.TargetChoices;
 import forge.game.zone.ZoneType;
 import forge.util.*;
-import forge.util.maps.MapOfLists;
 
 public class GameLogFormatter extends IGameEventVisitor.Base<GameLogEntry> {
     private final Localizer localizer = Localizer.getInstance();
@@ -144,6 +144,7 @@ public class GameLogFormatter extends IGameEventVisitor.Base<GameLogEntry> {
         for (Entry<RegisteredPlayer, String> entry : players.entrySet()) {
             int amount = winCount.getOrDefault(entry.getKey(), 0);
 
+            //String name = entry.getValue() + " [" + entry.getKey().getPlayer().getType() + "]";
             sb.append(entry.getValue()).append(": ").append(amount).append(" ");
         }
 
@@ -159,6 +160,7 @@ public class GameLogFormatter extends IGameEventVisitor.Base<GameLogEntry> {
         if (newLobbyPlayer == null) {
             message = localizer.getMessage("lblLogPlayerHasRestoredControlThemself", p.getName());
         } else {
+            if (newLobbyPlayer.getName().equals(p.getName())) return null;
             message = localizer.getMessage("lblLogPlayerControlledTargetPlayer", p.getName(), newLobbyPlayer.getName());
         }
         return new GameLogEntry(GameLogEntryType.PLAYER_CONTROL, message);
@@ -182,7 +184,7 @@ public class GameLogFormatter extends IGameEventVisitor.Base<GameLogEntry> {
         if (event.type() == DamageType.LoyaltyLoss) {
             additionalLog = localizer.getMessage("lblRemovingNLoyaltyCounter", String.valueOf(event.amount()));
         }
-        String message = localizer.getMessage("lblSourceDealsNDamageToDest", event.source().toString(), String.valueOf(event.amount()), additionalLog, event.card().toString());
+        String message = localizer.getMessage("lblSourceDealsNDamageToDest", event.source().toString(), String.valueOf(event.amount()), additionalLog.isEmpty() ? "" : " (" + additionalLog + ")", event.card().toString());
         return new GameLogEntry(GameLogEntryType.DAMAGE, message);
     }
 
@@ -247,9 +249,7 @@ public class GameLogFormatter extends IGameEventVisitor.Base<GameLogEntry> {
             if (sb.length() > 0) sb.append("\n");
             sb.append(localizer.getMessage("lblLogPlayerAssignedAttackerToAttackTarget", ev.player(), Lang.joinHomogenous(attackers), k));
         }
-        if (sb.length() == 0) {
-            sb.append(localizer.getMessage("lblPlayerDidntAttackThisTurn").replace("%s", ev.player().toString()));
-        }
+        if (sb.length() == 0) return null;
         return new GameLogEntry(GameLogEntryType.COMBAT, sb.toString());
     }
 
@@ -262,9 +262,9 @@ public class GameLogFormatter extends IGameEventVisitor.Base<GameLogEntry> {
 
         Collection<Card> blockers = null;
 
-        for (Entry<GameEntity, MapOfLists<Card, Card>> kv : ev.blockers().entrySet()) {
+        for (Entry<GameEntity, Multimap<Card, Card>> kv : ev.blockers().entrySet()) {
             GameEntity defender = kv.getKey();
-            MapOfLists<Card, Card> attackers = kv.getValue();
+            Multimap<Card, Card> attackers = kv.getValue();
             if (attackers == null || attackers.isEmpty()) {
                 continue;
             }
@@ -280,7 +280,7 @@ public class GameLogFormatter extends IGameEventVisitor.Base<GameLogEntry> {
             }
 
             boolean firstAttacker = true;
-            for (final Entry<Card, Collection<Card>> att : attackers.entrySet()) {
+            for (final Entry<Card, Collection<Card>> att : attackers.asMap().entrySet()) {
                 if (!firstAttacker) sb.append("\n");
 
                 blockers = att.getValue();

@@ -274,14 +274,15 @@ public class SettingsPage extends TabPage<SettingsScreen> {
                         MatchController.instance.resetPlayerPanels();
                 }
             }, 1);
-        lstSettings.addItem(new BooleanSetting(FPref.UI_ALT_PLAYERZONETABS,
+        lstSettings.addItem(new CustomSelectSetting(FPref.UI_ALT_PLAYERZONETABS,
             Forge.getLocalizer().getMessage("lblAltZoneTabs"),
-            Forge.getLocalizer().getMessage("nlAltZoneTabs")) {
+            Forge.getLocalizer().getMessage("nlAltZoneTabs"),
+            Lists.newArrayList("Off", "Vertical", "Horizontal")) {
                 @Override
-                public void select() {
-                    super.select();
+                public void valueChanged(String newValue) {
+                    super.valueChanged(newValue);
                     //update
-                    Forge.altZoneTabs = FModel.getPreferences().getPrefBoolean(FPref.UI_ALT_PLAYERZONETABS);
+                    Forge.setAltZoneTabMode(FModel.getPreferences().getPref(FPref.UI_ALT_PLAYERZONETABS));
                     if (MatchController.instance != null)
                         MatchController.instance.resetPlayerPanels();
                 }
@@ -592,6 +593,9 @@ public class SettingsPage extends TabPage<SettingsScreen> {
         lstSettings.addItem(new BooleanSetting(FPref.UI_OVERLAY_CARD_MANA_COST,
             Forge.getLocalizer().getMessage("lblShowCardManaCostOverlays"),
             Forge.getLocalizer().getMessage("nlShowCardManaCostOverlays")), 5);
+        lstSettings.addItem(new BooleanSetting(FPref.UI_OVERLAY_CARD_PERPETUAL_MANA_COST,
+            Forge.getLocalizer().getMessage("lblShowCardPerpetualManaCostOverlays"),
+            Forge.getLocalizer().getMessage("nlShowCardPerpetualManaCostOverlays")), 5);
         lstSettings.addItem(new BooleanSetting(FPref.UI_OVERLAY_CARD_POWER,
             Forge.getLocalizer().getMessage("lblShowCardPTOverlays"),
             Forge.getLocalizer().getMessage("nlShowCardPTOverlays")), 5);

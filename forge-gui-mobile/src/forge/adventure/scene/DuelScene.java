@@ -14,6 +14,7 @@ import forge.adventure.player.AdventurePlayer;
 import forge.adventure.stage.GameHUD;
 import forge.adventure.stage.IAfterMatch;
 import forge.adventure.util.AdventureEventController;
+import forge.adventure.util.AdventureModes;
 import forge.adventure.util.Config;
 import forge.adventure.util.Current;
 import forge.assets.FBufferedImage;
@@ -23,8 +24,11 @@ import forge.game.GameRules;
 import forge.game.GameType;
 import forge.game.player.Player;
 import forge.game.player.RegisteredPlayer;
+import forge.game.GameOutcome;
 import forge.gamemodes.match.HostedMatch;
 import forge.gamemodes.quest.QuestUtil;
+import forge.localinstance.properties.ForgePreferences;
+import forge.model.FModel;
 import forge.gui.FThreads;
 import forge.gui.interfaces.IGuiGame;
 import forge.item.IPaperCard;
@@ -36,6 +40,7 @@ import forge.screens.LoadingOverlay;
 import forge.screens.TransitionScreen;
 import forge.screens.match.MatchController;
 import forge.sound.MusicPlaylist;
+import forge.sound.SoundSystem;
 import forge.toolbox.FOptionPane;
 import forge.trackable.TrackableCollection;
 import forge.util.Aggregates;
@@ -68,7 +73,6 @@ public class DuelScene extends ForgeScene {
     boolean arenaBattleChallenge = false;
     boolean isArena = false;
     AdventureEventData eventData;
-    private LoadingOverlay matchOverlay;
     final int enemyAvatarKey = 90001;
     final int playerAvatarKey = 90000;
     FOptionPane bossDialogue;
@@ -105,6 +109,18 @@ public class DuelScene extends ForgeScene {
                     }
                 }
             }
+
+            // Mostly for ante handling, but also blacker lotus
+            GameOutcome.AnteResult anteResult = hostedMatch.getGame().getOutcome().getAnteResult(humanPlayer);
+            if (anteResult != null) {
+                for (PaperCard card : anteResult.wonCards) {
+                    Current.player().addCard(card);
+                }
+                for (PaperCard card : anteResult.lostCards) {
+                    // We could clean this up by trying to combine all the lostCards into a mapping, but good enough for now
+                    Current.player().removeLostCardFromPools(card);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -132,7 +148,7 @@ public class DuelScene extends ForgeScene {
     void afterGameEnd(String enemyName, boolean winner) {
         Forge.advFreezePlayerControls = winner;
         endRunnable = () -> Gdx.app.postRunnable(() -> {
-            GameHUD.getInstance().switchAudio();
+            GameHUD.getInstance().updateBGM();
             dungeonEffect = null;
             callbackExit = false;
             Forge.clearTransitionScreen();
@@ -142,7 +158,7 @@ public class DuelScene extends ForgeScene {
             Current.player().getStatistic().setResult(enemyName, winner);
 
             if (last instanceof IAfterMatch) {
-                ((IAfterMatch) last).setWinner(winner);
+                ((IAfterMatch) last).setWinner(winner, isArena);
             }
         });
     }
@@ -191,19 +207,24 @@ public class DuelScene extends ForgeScene {
 
     @Override
     public void enter() {
-        GameHUD.getInstance().unloadAudio();
-        Set<GameType> appliedVariants = new HashSet<>();
+        SoundSystem.instance.stopBackgroundMusic();
+        GameType mainGameType;
+        boolean isDeckMissing = false;
+        String isDeckMissingMsg = "";
         if (eventData != null && eventData.eventRules != null) {
-            appliedVariants.add(eventData.eventRules.gameType);
+            mainGameType = eventData.eventRules.gameType;
+        } else if (AdventurePlayer.current().getAdventureMode() == AdventureModes.Commander){
+            mainGameType = GameType.Commander;
         } else {
-            appliedVariants.add(GameType.Adventure);
+            mainGameType = GameType.Adventure;
         }
+        Set<GameType> appliedVariants = EnumSet.of(mainGameType);
 
         AdventurePlayer advPlayer = Current.player();
 
         List<RegisteredPlayer> players = new ArrayList<>();
 
-        applyAdventureDeckRules();
+        applyAdventureDeckRules(mainGameType.getDeckFormat());
         int playerCount = 1;
         EnemyData currentEnemy = enemy.getData();
         for (int i = 0; i < 8 && currentEnemy != null; i++) {
@@ -274,7 +295,7 @@ public class DuelScene extends ForgeScene {
 
         currentEnemy = enemy.getData();
         boolean bossBattle = currentEnemy.boss;
-        for (int i = 0; i < 8 && currentEnemy != null; i++) {
+        for (int i = 0; i < playerCount && currentEnemy != null; i++) {
             Deck deck;
 
             if (this.chaosBattle) { //random challenge for chaos mode
@@ -293,6 +314,12 @@ public class DuelScene extends ForgeScene {
                 deck = eventData.nextOpponent.getDeck();
             } else {
                 deck = currentEnemy.copyPlayerDeck ? this.playerDeck : currentEnemy.generateDeck(Current.player().isFantasyMode(), Current.player().isUsingCustomDeck() || Current.player().isHardorInsaneDifficulty());
+            }
+            if (deck == null) {
+                isDeckMissing = true;
+                isDeckMissingMsg = "Deck for " + currentEnemy.getName() + " is missing! " + (this.eventData == null ? "Genetic AI deck will be used." : "Player deck will be used.");
+                System.err.println(isDeckMissingMsg);
+                deck = this.eventData == null ? Aggregates.random(DeckProxy.getAllGeneticAIDecks()).getDeck() : this.playerDeck;
             }
             RegisteredPlayer aiPlayer = RegisteredPlayer.forVariants(playerCount, appliedVariants, deck, null, false, null, null);
 
@@ -358,8 +385,8 @@ public class DuelScene extends ForgeScene {
             rules = new GameRules(GameType.Adventure);
             rules.setGamesPerMatch(enemy.getData().gamesPerMatch);
         }
-        rules.setPlayForAnte(false);
-        rules.setMatchAnteRarity(true);
+        rules.setPlayForAnte(FModel.getPreferences().getPrefBoolean(ForgePreferences.FPref.UI_ANTE));
+        rules.setMatchAnteRarity(FModel.getPreferences().getPrefBoolean(ForgePreferences.FPref.UI_ANTE_MATCH_RARITY));
         rules.setManaBurn(false);
         rules.setWarnAboutAICards(false);
 
@@ -367,9 +394,10 @@ public class DuelScene extends ForgeScene {
         hostedMatch.startMatch(rules, appliedVariants, players, guiMap, bossBattle ? MusicPlaylist.BOSS : MusicPlaylist.MATCH);
         MatchController.instance.setGameView(hostedMatch.getGameView());
         boolean showMessages = enemy.getData().boss || (enemy.getData().copyPlayerDeck && Current.player().isUsingCustomDeck());
-        if (chaosBattle || showMessages) {
+        LoadingOverlay matchOverlay;
+        if (chaosBattle || showMessages || isDeckMissing) {
             final FBufferedImage fb = getFBEnemyAvatar();
-            bossDialogue = createFOption(Forge.getLocalizer().getMessage("AdvBossIntro" + Aggregates.randomInt(1, 35)),
+            bossDialogue = createFOption(isDeckMissing ? isDeckMissingMsg : Forge.getLocalizer().getMessage("AdvBossIntro" + Aggregates.randomInt(1, 35)),
                     enemy.getName(), fb, fb::dispose);
             matchOverlay = new LoadingOverlay(() -> FThreads.delayInEDT(300, () -> FThreads.invokeInEdtNowOrLater(() ->
                     bossDialogue.show())), false, true);
@@ -393,16 +421,25 @@ public class DuelScene extends ForgeScene {
     private static final String PLACEHOLDER_ATTRACTION = "Coin-Operated Pony";
     private static final String PLACEHOLDER_CONTRAPTION = "Automatic Fidget Spinner";
 
-    private void applyAdventureDeckRules() {
+    private void applyAdventureDeckRules(DeckFormat format) {
         //Can't just keep the player from entering a battle if their deck is invalid. So instead we'll just edit their deck.
         CardPool mainSection = playerDeck.getMain(), attractions = playerDeck.get(DeckSection.Attractions), contraptions = playerDeck.get(DeckSection.Contraptions);
-        DeckFormat format = DeckFormat.Adventure;
 
         removeExcessCopies(mainSection, format);
         removeExcessCopies(attractions, format);
         removeExcessCopies(contraptions, format);
 
-        int missingCards = Config.instance().getConfigData().minDeckSize - mainSection.countAll();
+        int mainSize = mainSection.countAll();
+
+        int maxDeckSize = format == DeckFormat.Adventure ? Integer.MAX_VALUE : format.getMainRange().getMaximum();
+        int excessCards = mainSize - maxDeckSize;
+        if (excessCards > 0) {
+            List<PaperCard> removals = Aggregates.random(mainSection.toFlatList(), excessCards);
+            mainSection.removeAllFlat(removals);
+        }
+
+        int minDeckSize = format == DeckFormat.Adventure ? Config.instance().getConfigData().minDeckSize : format.getMainRange().getMinimum();
+        int missingCards = minDeckSize - mainSize;
         if (missingCards > 0) //Replace unknown cards for a Wastes.
             mainSection.add(PLACEHOLDER_MAIN, missingCards);
 
@@ -459,23 +496,14 @@ public class DuelScene extends ForgeScene {
     private String selectAI(String ai) { //Decide opponent AI.
         String AI = ""; //Use user settings if it's null.
         if (ai != null) {
-            switch (ai.toLowerCase()) { //We use this way to ensure capitalization is exact.
+            AI = switch (ai.toLowerCase()) { //We use this way to ensure capitalization is exact.
                 //We don't want misspellings here.
-                case "default":
-                    AI = "Default";
-                    break;
-                case "reckless":
-                    AI = "Reckless";
-                    break;
-                case "cautious":
-                    AI = "Cautious";
-                    break;
-                case "experimental":
-                    AI = "Experimental";
-                    break;
-                default:
-                    AI = ""; //User settings.
-            }
+                case "default" -> "Default";
+                case "reckless" -> "Reckless";
+                case "cautious" -> "Cautious";
+                case "experimental" -> "Experimental";
+                default -> ""; //User settings.
+            };
         }
         return AI;
     }

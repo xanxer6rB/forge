@@ -1,8 +1,8 @@
 package forge.game.combat;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import forge.game.staticability.StaticAbilityMustAttack;
 import org.apache.commons.lang3.tuple.Pair;
@@ -39,10 +39,12 @@ public class AttackRequirement {
 
         //MustAttack static check
         final List<GameEntity> mustAttack = StaticAbilityMustAttack.entitiesMustAttack(attacker);
-        nAttackAnything += Collections.frequency(mustAttack, attacker);
         for (GameEntity e : mustAttack) {
-            if (e.equals(attacker)) continue;
-            defenderSpecific.add(e);
+            if (e.equals(attacker)) {
+                nAttackAnything++;
+            } else {
+                defenderSpecific.add(e);
+            }
         }
 
         for (final GameEntity defender : possibleDefenders) {
@@ -101,8 +103,7 @@ public class AttackRequirement {
             if (attackers.size() != 1 || !constraints.get(attackers.entrySet().iterator().next().getKey()).getTypes().contains(AttackRestrictionType.ONLY_ALONE)) {
                 for (final Map.Entry<Card, Integer> mustAttack : causesToAttack.entrySet()) {
                     if (constraints.get(mustAttack.getKey()).getTypes().contains(AttackRestrictionType.ONLY_ALONE)) continue;
-                    int max = GlobalAttackRestrictions.getGlobalRestrictions(mustAttack.getKey().getController(), combat.getDefenders()).getMax();
-                    if (max == -1) max = Integer.MAX_VALUE;
+                    int max = Objects.requireNonNullElse(GlobalAttackRestrictions.getGlobalRestrictions(mustAttack.getKey().getController(), combat.getDefenders()).getMax(), Integer.MAX_VALUE);
 
                     // only count violations if the forced creature can actually attack and has no cost incurred for doing so
                     if (attackers.size() < max && !attackers.containsKey(mustAttack.getKey()) && CombatUtil.canAttack(mustAttack.getKey()) && CombatUtil.getAttackCost(defender.getGame(), mustAttack.getKey(), defender) == null) {
