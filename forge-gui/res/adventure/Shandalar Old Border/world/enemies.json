@@ -5320,7 +5320,7 @@
         "type": "item",
         "probability": 1,
         "count": 1,
-        "itemName": "War Beast Reins"
+        "itemName": "War Beast Gauntlet"
       }
     ],
     "colors": "GB",
@@ -20816,7 +20816,7 @@
         "type": "item",
         "probability": 1,
         "count": 1,
-        "itemName": "Ring of Ma'r\u00fbf"
+        "itemName": "Djinn's Silks"
       }
     ],
     "questTags": [
@@ -24341,6 +24341,11 @@
         "probability": 1,
         "count": 1,
         "cardName": "Toxin Sliver|LGN"
+      },
+      {
+        "type": "life",
+        "probability": 1,
+        "count": 1
       }
     ],
     "colors": "BGRUW",
@@ -25106,7 +25111,7 @@
         "type": "item",
         "probability": 1,
         "count": 1,
-        "itemName": "Rainbow Headdress"
+        "itemName": "Crown of the Vale"
       },
       {
         "type": "shards",
@@ -28073,7 +28078,7 @@
         "type": "item",
         "probability": 1,
         "count": 1,
-        "itemName": "Hivecaller's Horn"
+        "itemName": "Hivecaller's Staff"
       },
       {
         "type": "shards",
@@ -32968,7 +32973,7 @@
       },
       {
         "type": "item",
-        "itemName": "Headdress of Paradise",
+        "itemName": "Circlet of Paradise",
         "count": 1,
         "probability": 1
       },
@@ -33131,7 +33136,7 @@
       },
       {
         "type": "item",
-        "itemName": "Multani's Laurels"
+        "itemName": "Mask of Multani"
       }
     ]
   },
@@ -33537,6 +33542,7 @@
     "difficulty": 0.1,
     "speed": 30,
     "life": 60,
+    "gamesPerMatch": 3,
     "rewards": [
       {
         "type": "gold",
@@ -33640,6 +33646,7 @@
     "difficulty": 0.1,
     "speed": 30,
     "life": 60,
+    "gamesPerMatch": 3,
     "rewards": [
       {
         "type": "gold",
@@ -34708,7 +34715,7 @@
     ],
     "ai": "",
     "boss": true,
-    "spawnRate": 0.3,
+    "spawnRate": 0,
     "difficulty": 0.8,
     "speed": 20,
     "life": 40,
@@ -34758,6 +34765,12 @@
         "probability": 1,
         "count": 1,
         "cardName": "Armageddon|LEA"
+      },
+      {
+        "type": "item",
+        "probability": 1,
+        "count": 1,
+        "itemName": "Windwalker's Blessing"
       }
     ],
     "colors": "W",
@@ -34852,7 +34865,7 @@
     ],
     "ai": "",
     "boss": true,
-    "spawnRate": 0.3,
+    "spawnRate": 0,
     "difficulty": 0.8,
     "speed": 20,
     "life": 40,
@@ -34896,6 +34909,12 @@
         "probability": 1,
         "count": 1,
         "cardName": "Psionic Blast|LEA"
+      },
+      {
+        "type": "item",
+        "probability": 1,
+        "count": 1,
+        "itemName": "Windwalker's Blessing"
       }
     ],
     "colors": "U",
@@ -34990,7 +35009,7 @@
     ],
     "ai": "",
     "boss": true,
-    "spawnRate": 0.3,
+    "spawnRate": 0,
     "difficulty": 0.8,
     "speed": 20,
     "life": 40,
@@ -35034,6 +35053,12 @@
         "probability": 1,
         "count": 1,
         "cardName": "Mind Twist|LEA"
+      },
+      {
+        "type": "item",
+        "probability": 1,
+        "count": 1,
+        "itemName": "Windwalker's Blessing"
       }
     ],
     "colors": "B",
@@ -35128,7 +35153,7 @@
     ],
     "ai": "",
     "boss": true,
-    "spawnRate": 0.3,
+    "spawnRate": 0,
     "difficulty": 0.8,
     "speed": 20,
     "life": 40,
@@ -35178,6 +35203,12 @@
         "probability": 1,
         "count": 1,
         "cardName": "Nalathni Dragon|DRC94"
+      },
+      {
+        "type": "item",
+        "probability": 1,
+        "count": 1,
+        "itemName": "Windwalker's Blessing"
       }
     ],
     "colors": "R",
@@ -35272,7 +35303,7 @@
     ],
     "ai": "",
     "boss": true,
-    "spawnRate": 0.3,
+    "spawnRate": 0,
     "difficulty": 0.8,
     "speed": 20,
     "life": 40,
@@ -35322,6 +35353,12 @@
         "probability": 1,
         "count": 1,
         "cardName": "Birds of Paradise|LEA"
+      },
+      {
+        "type": "item",
+        "probability": 1,
+        "count": 1,
+        "itemName": "Windwalker's Blessing"
       }
     ],
     "colors": "G",
@@ -36909,7 +36946,7 @@
         "type": "item",
         "probability": 1,
         "count": 1,
-        "itemName": "Bog Glider"
+        "itemName": "Bog Glider Glove"
       }
     ],
     "colors": "B",
@@ -37073,7 +37110,7 @@
         "type": "item",
         "probability": 1,
         "count": 1,
-        "itemName": "Crown of Gaea"
+        "itemName": "Amulet of Gaea"
       },
       {
         "type": "life",
@@ -37292,7 +37329,7 @@
         "type": "item",
         "probability": 1,
         "count": 1,
-        "itemName": "Christmas Gift"
+        "itemName": "Santa's Hat"
       },
       {
         "type": "card",

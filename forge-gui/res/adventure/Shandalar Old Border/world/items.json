@@ -392,10 +392,10 @@
     "description": "Start with a 1/1 Human Wizard in play."
   },
   {
-    "name": "Tawnos's Hat",
+    "name": "Tawnos's Helm",
     "description": "Pay 2 and tap to make a creature with power 2 or less unblockable.",
     "equipmentSlot": "Neck",
-    "iconName": "TawnossWand",
+    "iconName": "TawnossHelm",
     "cost": 3000,
     "effect": {
       "startBattleWithCard": [
@@ -741,7 +741,7 @@
     "name": "Acidic Boot Dagger",
     "description": "Pay 4 to give old-fashioned deathtouch.",
     "equipmentSlot": "Boots",
-    "iconName": "AcidicDagger",
+    "iconName": "AcidicBootDagger",
     "cost": 3000,
     "effect": {
       "startBattleWithCard": [
@@ -918,10 +918,10 @@
     }
   },
   {
-    "name": "Spine Whip",
+    "name": "Spine Staff",
     "equipmentSlot": "Right",
     "cost": 3000,
-    "iconName": "DarkArmor",
+    "iconName": "SpineStaff",
     "effect": {
       "startBattleWithCard": [
         "Skeletal Snake|POR"
@@ -1165,7 +1165,7 @@
     "iconName": "MadStaff",
     "effect": {
       "startBattleWithCard": [
-        "Power Struggle|PAST"
+        "Power Struggle"
       ]
     },
     "description": "Randomly swap artifacts, creatures, or lands each upkeep."
@@ -1340,7 +1340,7 @@
     "name": "Feverbringer's Blade",
     "description": "Pay 2BB to put a -1/-1 counter on target creature.",
     "equipmentSlot": "Right",
-    "iconName": "FeverbringersCloak",
+    "iconName": "FeverbringersBlade",
     "cost": 3000,
     "effect": {
       "startBattleWithCard": [
@@ -1385,9 +1385,9 @@
     }
   },
   {
-    "name": "Hivecaller's Horn",
+    "name": "Hivecaller's Staff",
     "equipmentSlot": "Left",
-    "iconName": "HivecallersHelm",
+    "iconName": "HivecallersStaff",
     "effect": {
       "startBattleWithCard": [
         "The Hive|LEA"
@@ -1514,12 +1514,12 @@
     "equipmentSlot": "Right",
     "iconName": "VampireBite",
     "effect": {
-      "lifeModifier": -5,
+      "lifeModifier": -2,
       "startBattleWithCard": [
-        "Treacherous Vampire|JUD"
+        "Vampire Hounds|EXO"
       ]
     },
-    "description": "-5 life. A 4/4 flyer that costs grave cards to attack/block. At threshold, gets bigger at a cost."
+    "description": "-2 life. A 2/2 that can be pumped by discarding cards."
   },
   {
     "name": "Belt of Worry Beads",
@@ -1618,7 +1618,7 @@
   {
     "name": "Storm Gauntlet",
     "equipmentSlot": "Right",
-    "iconName": "CrowcallersCharm",
+    "iconName": "StormGauntlet",
     "effect": {
       "startBattleWithCard": [
         "Storm Crow|POR"
@@ -1664,7 +1664,7 @@
   {
     "name": "Molten Gauntlet",
     "equipmentSlot": "Right",
-    "iconName": "MoltenMantle",
+    "iconName": "MoltenGauntlet",
     "effect": {
       "lifeModifier": -3,
       "startBattleWithCard": [
@@ -1719,9 +1719,9 @@
     "description": "Pay 3 and tap to untap target creature."
   },
   {
-    "name": "Gladiator's Gladius",
+    "name": "Gladiator's Cestus",
     "equipmentSlot": "Right",
-    "iconName": "GladiatorsGreaves",
+    "iconName": "GladiatorsCestus",
     "effect": {
       "startBattleWithCard": [
         "Arena|PHPR"
@@ -1809,9 +1809,9 @@
     "description": "+2 life. Pay 2 and tap to mill opponent 2 cards."
   },
   {
-    "name": "War Beast Reins",
+    "name": "War Beast Gauntlet",
     "equipmentSlot": "Right",
-    "iconName": "WarBeastRidersBoots",
+    "iconName": "WarBeastGauntlet",
     "effect": {
       "startBattleWithCard": [
         "Phyrexian War Beast|ALL"
@@ -1870,7 +1870,7 @@
   {
     "name": "Infiltrator's Knife",
     "equipmentSlot": "Right",
-    "iconName": "InfiltratorsMask",
+    "iconName": "InfiltratorsKnife",
     "effect": {
       "lifeModifier": -4,
       "startBattleWithCard": [
@@ -1894,7 +1894,7 @@
   {
     "name": "Scythe of Yawgmoth",
     "equipmentSlot": "Right",
-    "iconName": "ArmorOfYawgmoth",
+    "iconName": "ScytheOfYawgmoth",
     "effect": {
       "startBattleWithCard": [
         "Order of Yawgmoth|USG"
@@ -2101,9 +2101,9 @@
     "description": "Pay 3 and tap to make a 0/1 token that sacs for any color of mana."
   },
   {
-    "name": "Rainbow Headdress",
+    "name": "Crown of the Vale",
     "equipmentSlot": "Neck",
-    "iconName": "MapToTheVale",
+    "iconName": "CrownOfTheVale",
     "effect": {
       "startBattleWithCard": [
         "Rainbow Vale|FEM"
@@ -2263,7 +2263,7 @@
     "name": "Breathstealer's Blade",
     "description": "-2 life. A 2/2. Pay B to give +1/-1.",
     "equipmentSlot": "Right",
-    "iconName": "BreathstealersRobe",
+    "iconName": "BreathstealersBlade",
     "effect": {
       "lifeModifier": -2,
       "startBattleWithCard": [
@@ -2275,7 +2275,7 @@
     "name": "Ichor Knife",
     "description": "A 3/1 haste that returns from graveyard by exiling a black creature.",
     "equipmentSlot": "Right",
-    "iconName": "DementiaMask",
+    "iconName": "IchorKnife",
     "effect": {
       "startBattleWithCard": [
         "Ichorid|TOR"
@@ -2341,9 +2341,9 @@
     "description": "Gives each player a +1/+1 counter each turn."
   },
   {
-    "name": "Bog Glider",
+    "name": "Bog Glider Glove",
     "equipmentSlot": "Right",
-    "iconName": "BogGliderGreaves",
+    "iconName": "BogGliderGlove",
     "effect": {
       "lifeModifier": -2,
       "startBattleWithCard": [
@@ -2388,9 +2388,9 @@
     "cost": 12000
   },
   {
-    "name": "Headdress of Paradise",
+    "name": "Circlet of Paradise",
     "equipmentSlot": "Neck",
-    "iconName": "MaptoParadise",
+    "iconName": "CircletOfParadise",
     "effect": {
       "startBattleWithCard": [
         "Undiscovered Paradise|VIS"
@@ -2421,9 +2421,9 @@
     "description": "A 1/1 Elf Wizard. Pay 3 and tap to reveal hand, give +X/+X for green cards."
   },
   {
-    "name": "Multani's Laurels",
+    "name": "Mask of Multani",
     "equipmentSlot": "Neck",
-    "iconName": "MultanisBoots",
+    "iconName": "MaskOfMultani",
     "effect": {
       "lifeModifier": -5,
       "startBattleWithCard": [
@@ -2433,9 +2433,9 @@
     "description": "-5 life. Draw a card whenever a spell of yours is countered."
   },
   {
-    "name": "Crown of Gaea",
+    "name": "Amulet of Gaea",
     "equipmentSlot": "Neck",
-    "iconName": "GarmentsofGaea",
+    "iconName": "AmuletOfGaea",
     "effect": {
       "startBattleWithCard": [
         "Pulse of Llanowar|INV"
@@ -2502,7 +2502,7 @@
   {
     "name": "Kobold King's Blade",
     "equipmentSlot": "Right",
-    "iconName": "KoboldKingsCrown",
+    "iconName": "KoboldKingsBlade",
     "effect": {
       "changeStartCards": -1,
       "startBattleWithCard": [
@@ -2908,6 +2908,15 @@
       "startBattleWithCard": [
         "Marble Priest|LEG"
       ]
+    }
+  },
+  {
+    "name": "Windwalker's Blessing",
+    "description": "A blessing from the winds grants permanent swiftness. +35% movement speed.",
+    "equipmentSlot": "Blessing",
+    "iconName": "MovementSpeed",
+    "effect": {
+      "moveSpeed": 1.35
     }
   }
 ]
