@@ -5,6 +5,7 @@ import forge.ai.GameState;
 import forge.deck.CardPool;
 import forge.game.GameEntityView;
 import forge.game.event.GameEvent;
+import org.tinylog.Logger;
 import forge.game.GameView;
 import forge.game.card.CardView;
 import forge.game.phase.PhaseType;
@@ -28,6 +29,7 @@ import forge.util.ITriggerEvent;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class NetGuiGame extends AbstractGuiGame {
 
@@ -314,16 +316,16 @@ public class NetGuiGame extends AbstractGuiGame {
 
     @Override
     public void handleGameEvent(GameEvent event) {
-        updateGameView();
-        send(ProtocolMethod.handleGameEvent, event);
+        handleGameEvents(List.of(event));
     }
 
     @Override
     public void handleGameEvents(List<GameEvent> events) {
-        updateGameView();
-        for (GameEvent event : events) {
-            send(ProtocolMethod.handleGameEvent, event);
-        }
+        if (paused) { return; }
+        Logger.info("Sending batch of {}: [{}]", () -> events.size(),
+                () -> events.stream().map(e -> e.getClass().getSimpleName()).collect(Collectors.joining(", ")));
+        sender.write(ProtocolMethod.setGameView, getGameView());
+        sender.send(ProtocolMethod.handleGameEvents, events);
     }
 
     @Override
