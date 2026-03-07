@@ -3228,6 +3228,7 @@ public class CardFactoryUtil {
             sa.setCardState(host.getAlternateState());
             sa.setAlternativeCost(AlternativeCost.MTMtE);
 
+            sa.putParam("Secondary", "True");
             sa.putParam("PrecostDesc", n[0] + " ");
             sa.putParam("CostDesc", convertCost.toString());
             sa.putParam("AfterDescription", "(Converted)");
@@ -4163,12 +4164,12 @@ public class CardFactoryUtil {
 
         SpellAbility saExile = AbilityFactory.getAbility(abExile, card);
 
-        String abEffect = "DB$ Effect | RememberObjects$ Self | StaticAbilities$ Play | ForgetOnMoved$ Exile | Duration$ Permanent | ConditionDefined$ Self | ConditionPresent$ Card.!copiedSpell+!token";
+        String abEffect = "DB$ Effect | RememberObjects$ Self | StaticAbilities$ Play | ForgetOnMoved$ Exile | Duration$ Permanent | ConditionDefined$ Self | ConditionPresent$ Card.!copiedSpell+!token | Adventure$ True";
         AbilitySub saEffect = (AbilitySub)AbilityFactory.getAbility(abEffect, card);
 
         StringBuilder sbPlay = new StringBuilder();
         sbPlay.append("Mode$ Continuous | MayPlay$ True | EffectZone$ Command | Affected$ Card.IsRemembered+!Adventure");
-        sbPlay.append(" | AffectedZone$ Exile | Description$ You may cast the card.");
+        sbPlay.append(" | AffectedZone$ Exile | Description$ You may cast EFFECTSOURCE.");
         saEffect.setSVar("Play", sbPlay.toString());
 
         saExile.setSubAbility(saEffect);
