@@ -320,7 +320,7 @@ public class AdventurePlayer implements Serializable, SaveFileContent {
     public Boolean isFemale() {
         return isFemale;
     }
-
+    
     public float getWorldPosX() {
         return worldPosX;
     }
@@ -339,6 +339,10 @@ public class AdventurePlayer implements Serializable, SaveFileContent {
 
     public AdventureModes getAdventureMode(){
         return adventureMode;
+    }
+
+    public boolean isCommanderMode() {
+        return adventureMode != null && adventureMode.isCommanderLike();
     }
 
     public int getMaxLife() {
